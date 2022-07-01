@@ -1,9 +1,64 @@
-import React from 'react'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
+import { FormProvider, useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { FormInput } from "../../components/form-components/FormInput";
+import SubmitButton from "../../components/form-components/SubmitButton";
+import { useAuth } from "../../context/AuthContext";
+import { loginSchema } from "../../validations/login.validation";
 
 const LoginPage = () => {
-  return (
-    <div>LoginPage</div>
-  )
-}
+	type FormData = Yup.InferType<typeof loginSchema>;
 
-export default LoginPage
+	const { logIn } = useAuth();
+	const router = useRouter();
+
+	const methods = useForm<FormData>({ mode: "onBlur", resolver: yupResolver(loginSchema) });
+	const {
+		handleSubmit,
+		formState: { errors, isSubmitting },
+		setError,
+	} = methods;
+
+	const onSubmit = async (data: FormData) => {
+		console.log({ data });
+		try {
+			const response = await logIn(data.email, data.password);
+			console.log({ response });
+			router.push("/dashboard");
+		} catch (error: any) {
+			console.log(error.message);
+		}
+	};
+
+	return (
+		<div className="sign-up-form container mx-auto w-96 mt-12 border-2 border-gray-400">
+			<h2 className="px-12 mt-8 text-center text-2xl font-semibold text-blue-900">Log In</h2>
+			<FormProvider {...methods}>
+				<form
+					action=""
+					className="w-80 mx-auto pb-12 px-4"
+					onSubmit={handleSubmit(onSubmit)}
+				>
+					<FormInput
+						label="Email"
+						name="email"
+						type="email"
+						formOptions={loginSchema.fields.email}
+						errors={errors.email}
+					/>
+					<FormInput
+						label="Password"
+						name="password"
+						type="password"
+						formOptions={loginSchema.fields.password}
+						errors={errors.password}
+					/>
+					<SubmitButton />
+				</form>
+			</FormProvider>
+		</div>
+	);
+};
+
+export default LoginPage;

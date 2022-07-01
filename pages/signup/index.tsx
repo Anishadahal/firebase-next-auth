@@ -3,36 +3,23 @@ import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "../../components/form-components/FormInput";
 import SubmitButton from "../../components/form-components/SubmitButton";
 import { useAuth } from "../../context/AuthContext";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-interface authType {
-	email: string;
-	password: string;
-}
+import { signupSchema } from "../../validations/signup.validation";
+
 const SignUpPage = () => {
-	const { user, signUp } = useAuth();
-	console.log({ user });
-	
-	const methods = useForm<authType>();
+	type FormData = Yup.InferType<typeof signupSchema>;
+
+	const { signUp } = useAuth();
+
+	const methods = useForm<FormData>({ mode: "onBlur", resolver: yupResolver(signupSchema) });
 	const {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 	} = methods;
 
-	const formOptions = {
-		email: {
-			required: "This field is required",
-		},
-		password: {
-			required: "This field is required",
-			minLength: {
-				value: 6,
-				message: "Password must be at least 6 characters",
-			},
-		},
-	};
-
-	const onSubmit = async (data: authType) => {
-		console.log({ data });
+	const onSubmit = async (data: FormData) => {
 		try {
 			await signUp(data.email, data.password);
 		} catch (error: any) {
@@ -40,7 +27,7 @@ const SignUpPage = () => {
 		}
 	};
 	return (
-		<div className="sign-up-form container mx-auto w-96 mt-12 border-2 border-yellow-300">
+		<div className="sign-up-form container mx-auto w-96 mt-12 border-2 border-gray-400">
 			<h2 className="px-12 mt-8 text-center text-2xl font-semibold text-blue-900">Sign Up</h2>
 			<FormProvider {...methods}>
 				<form
@@ -52,15 +39,22 @@ const SignUpPage = () => {
 						label="Email"
 						name="email"
 						type="email"
-						formOptions={formOptions.email}
+						formOptions={signupSchema.fields.email}
 						errors={errors.email}
 					/>
 					<FormInput
 						label="Password"
 						name="password"
 						type="password"
-						formOptions={formOptions.password}
+						formOptions={signupSchema.fields.password}
 						errors={errors.password}
+					/>
+					<FormInput
+						label="Confirm Password"
+						name="confirm_password"
+						type="password"
+						formOptions={signupSchema.fields.confirm_password}
+						errors={errors.confirm_password}
 					/>
 					<SubmitButton />
 				</form>

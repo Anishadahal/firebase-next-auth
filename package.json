@@ -6,11 +6,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.3",
     "firebase": "^9.8.4",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-hook-form": "^7.33.0"
+    "react-hook-form": "^7.33.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "17.0.35",
