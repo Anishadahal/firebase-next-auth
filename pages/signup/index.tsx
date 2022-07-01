@@ -5,7 +5,7 @@ import SubmitButton from "../../components/form-components/SubmitButton";
 import { useAuth } from "../../context/AuthContext";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { toast } from "react-hot-toast";
 import { signupSchema } from "../../validations/signup.validation";
 import { useRouter } from "next/router";
 import { DASHBOARD } from "../../utils/constant/routes.constant";
@@ -23,11 +23,13 @@ const SignUpPage = () => {
 	} = methods;
 
 	const onSubmit = async (data: FormData) => {
+		const toastId = toast.loading("Signing up...");
 		try {
 			await signUp(data.email, data.password);
+			toast.success("Successfully signed up!", { id: toastId });
 			router.push(DASHBOARD);
 		} catch (error: any) {
-			console.log(error.message);
+			toast.error(error.message, { id: toastId });
 		}
 	};
 	return (

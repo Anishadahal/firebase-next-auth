@@ -7,6 +7,7 @@ import SubmitButton from "../../components/form-components/SubmitButton";
 import { useAuth } from "../../context/AuthContext";
 import { DASHBOARD } from "../../utils/constant/routes.constant";
 import { loginSchema } from "../../validations/login.validation";
+import { toast } from "react-hot-toast";
 
 const LoginPage = () => {
 	type FormData = Yup.InferType<typeof loginSchema>;
@@ -22,11 +23,13 @@ const LoginPage = () => {
 	} = methods;
 
 	const onSubmit = async (data: FormData) => {
+		const toastId = toast.loading("Logging in...");
 		try {
 			await logIn(data.email, data.password);
+			toast.success("Successfully logged in!", { id: toastId });
 			router.push(DASHBOARD);
 		} catch (error: any) {
-			console.log(error.message);
+			toast.error(error.message, { id: toastId });
 		}
 	};
 
