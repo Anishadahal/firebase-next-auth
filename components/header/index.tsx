@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext";
+import { DASHBOARD, HOME, LOGIN, SIGN_UP } from "../../utils/constant/routes.constant";
 
 const Header = ({ children }: { children: React.ReactNode }) => {
 	const { user, logOut } = useAuth();
@@ -9,24 +10,24 @@ const Header = ({ children }: { children: React.ReactNode }) => {
 		{
 			id: 1,
 			name: "Home",
-			link: "/",
+			link: HOME,
 		},
 		{
 			id: 2,
 			name: "Login",
-			link: "/login",
+			link: LOGIN,
 		},
 		{
 			id: 3,
 			name: "Sign Up",
-			link: "/signup",
+			link: SIGN_UP,
 		},
 	];
 
 	const handleLogout = async () => {
 		try {
 			await logOut();
-			router.push("/login");
+			router.push(LOGIN);
 		} catch (error) {}
 	};
 	return (
@@ -58,7 +59,7 @@ const Header = ({ children }: { children: React.ReactNode }) => {
 							) : (
 								<>
 									<li className="my-3 md:my-0 items-center mr-4 md:inline-block block ">
-										<Link href="/dashboard">
+										<Link href={DASHBOARD}>
 											<a
 												href=""
 												className="text-blue-800 hover:text-blue-900 transition"

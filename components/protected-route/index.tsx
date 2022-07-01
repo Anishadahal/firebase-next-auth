@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { LOGIN } from "../../utils/constant/routes.constant";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const router = useRouter();
@@ -8,7 +9,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 	useEffect(() => {
 		if (!user) {
-			router.push("/login");
+			router.push(LOGIN);
 		}
 	}, [router, user]);
 	return <div>{user ? children : null}</div>;

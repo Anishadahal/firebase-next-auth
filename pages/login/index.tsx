@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { FormInput } from "../../components/form-components/FormInput";
 import SubmitButton from "../../components/form-components/SubmitButton";
 import { useAuth } from "../../context/AuthContext";
+import { DASHBOARD } from "../../utils/constant/routes.constant";
 import { loginSchema } from "../../validations/login.validation";
 
 const LoginPage = () => {
@@ -21,11 +22,9 @@ const LoginPage = () => {
 	} = methods;
 
 	const onSubmit = async (data: FormData) => {
-		console.log({ data });
 		try {
-			const response = await logIn(data.email, data.password);
-			console.log({ response });
-			router.push("/dashboard");
+			await logIn(data.email, data.password);
+			router.push(DASHBOARD);
 		} catch (error: any) {
 			console.log(error.message);
 		}

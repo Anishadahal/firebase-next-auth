@@ -7,11 +7,14 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { signupSchema } from "../../validations/signup.validation";
+import { useRouter } from "next/router";
+import { DASHBOARD } from "../../utils/constant/routes.constant";
 
 const SignUpPage = () => {
 	type FormData = Yup.InferType<typeof signupSchema>;
 
 	const { signUp } = useAuth();
+	const router = useRouter();
 
 	const methods = useForm<FormData>({ mode: "onBlur", resolver: yupResolver(signupSchema) });
 	const {
@@ -22,6 +25,7 @@ const SignUpPage = () => {
 	const onSubmit = async (data: FormData) => {
 		try {
 			await signUp(data.email, data.password);
+			router.push(DASHBOARD);
 		} catch (error: any) {
 			console.log(error.message);
 		}
