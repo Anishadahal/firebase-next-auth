@@ -10,7 +10,6 @@ export const signupSchema = Yup.object({
 		.notOneOf(emailAddresses, "Email address is already taken.")
 		.required("Email is required."),
 	password: Yup.string()
-		.lowercase()
 		.required("Password is required")
 		.matches(LOWERCASE_REGEX, "At least one lowercase letter required.")
 		.matches(UPPERCASE_REGEX, "At least one uppercase letter required.")
